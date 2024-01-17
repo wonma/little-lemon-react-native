@@ -1,82 +1,80 @@
-import { useState, useContext } from 'react';
-import { AuthContext } from '../App';
-
-import { Text, TextInput, StyleSheet, View, Alert, Pressable } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Button from '../components/Button';
-import { validateEmail, validateFirstName } from '../utils';
-
-function Onboarding () {
-    const [ firstName, setFirstName ] = useState('');
-    const [ email, setEmail ] = useState('');
-    const [ isNameValid, setIsNameValid ] = useState(false);
-    const [ isEmailValid, setIsEmailValid ] = useState(false);
-    const {state, dispatch} = useContext(AuthContext);
-
-    let activeButton = isNameValid && isEmailValid ;
-    
-    const onPressAction = async () => {
-        try {
-            const jsonValue = await JSON.stringify({
-                firstName,
-                lastName: '',
-                email,
-                avatar: '',
-                phoneNumber: '',
-                notification: {
-                  orderStatus: true,
-                  passwordChange: true,
-                  specialOffer: true,
-                  newsletter: true
-                }
-            })
-            await AsyncStorage.setItem('loginInfo', jsonValue)
-            console.log('hehehehe')
-            dispatch({type:'complete_onboarding'})
-        } catch (e) {
-            console.log(e)
-        }
-    }
-
+import {
+    Image,
+    StyleSheet,
+    Text,
+    View,
+    useWindowDimensions,
+  } from "react-native";
+  import React, { useState } from "react";
+  import PagerView from "react-native-pager-view";
+  import SignUp from "../components/Onbording/SignUp";
+  import Review from "../components/Onbording/Review";
+  import { SafeAreaView } from "react-native-safe-area-context";
+  import { createNativeStackNavigator } from "@react-navigation/native-stack";
+  import Start from "../components/Onbording/Start";
+  
+  const Stack = createNativeStackNavigator();
+  
+  const Onboarding = () => {
+    const [current, setCurrent] = useState(0);
+  
     return (
-        <View style={styles.container}>
-            <Text style={styles.label}>First Name</Text>
-            <TextInput 
-                style={styles.input}
-                onChangeText={(text)=>{
-                    setFirstName(text)
-                    setIsNameValid(validateFirstName(text))
-                }}
-                value={firstName}
+      <SafeAreaView style={styles.container}>
+        <PagerView
+          style={styles.viewPager}
+          initialPage={0}
+          onPageSelected={({ nativeEvent }) => setCurrent(nativeEvent.position)}
+        >
+          <View style={styles.page} key="1">
+            <Start/>
+          </View>
+  
+          <View style={styles.page} key="2">
+            <Review />
+          </View>
+          <View style={styles.page} key="3">
+            <SignUp />
+          </View>
+        </PagerView>
+        <View style={styles.dotContainer}>
+          {[...Array(3).keys()].map((i) => (
+            <View
+              style={[
+                styles.dot,
+                { backgroundColor: i == current ? "white" : "black" },
+              ]}
+              key={i}
             />
-            <Text style={styles.label}>Email</Text>
-            <TextInput 
-                style={styles.input}
-                onChangeText={(text)=>{
-                    setEmail(text)
-                    setIsEmailValid(validateEmail(text))
-                }}
-                value={email}
-            />
-            <Button 
-                onPressAction={onPressAction}
-                activeButton={activeButton}
-            >Next</Button>
+          ))}
         </View>
-    )
-}
-
-const styles = StyleSheet.create({
+      </SafeAreaView>
+    );
+  };
+  
+  const styles = StyleSheet.create({
     container: {
-        flex: 1
+      flex: 1,
+      justifyContent: "center",
+      gap: 20,
     },
-    label: {
-        fontSize: 16
+    viewPager: {
+      flex: 1,
     },
-    input: {
-        borderRadius: 8,
-        borderWidth: 1
-    }
-});
-
-export default Onboarding;
+    page: {},
+    dot: {
+      width: 10,
+      aspectRatio: 1,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderRadius: 80,
+    },
+    dotContainer: {
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      gap: 10,
+      marginBottom: 10,
+    },
+  });
+  
+  export default Onboarding;
+  
