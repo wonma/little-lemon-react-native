@@ -11,3 +11,20 @@ export const validateEmail = (email) => {
 export const validateFirstName = (firstName) => {
     return /^[a-zA-Z]+$/.test(firstName);
 }
+
+
+export const validatePhoneNumber = (phoneNumber) => {
+  // Regular expression for a US phone number
+  var regex = /^\(?(\d{3})\)?[-.\s]?(\d{3})[-.\s]?(\d{4})$/;
+
+  // Test the input against the regex
+  return regex.test(phoneNumber);
+}
+
+// Example usage
+// var userPhoneNumber = "555-123-4567";
+// if (isValidUSPhoneNumber(userPhoneNumber)) {
+//   console.log("Valid US phone number");
+// } else {
+//   console.log("Invalid US phone number");
+// }

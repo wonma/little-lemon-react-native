@@ -7,19 +7,19 @@ import * as ImagePicker from 'expo-image-picker';
 import { validatePhoneNumber } from '../utils';
 
 function Profile () {
-  const [ user, setUser ] = useState(null);
-  const {setIsOnboardingCompleted} = useContext(AuthContext);
+  const {state, dispatch} = useContext(AuthContext);
 
   useEffect(()=> {
     (async () => {
       try{
           const jsonValue = await AsyncStorage.getItem('loginInfo');
           const result = await jsonValue !== null ? JSON.parse(jsonValue) : null;
-          await result && setUser(result);
-          await console.log(user);
+          await result !== null ? dispatch({
+            type: 'update_user',
+            userInfo: result
+          }) : null;
       } catch(e){
           console.log(e)
-
       }
   })()
   }, [])
@@ -36,16 +36,21 @@ function Profile () {
     console.log(result);
 
     if (!result.canceled) {
-      setUser({
-        ...user,
-        avatar: result.assets[0].uri
-      });
+      dispatch({
+        type: 'update_user',
+        userInfo: {
+          ...state.user,
+          avatar: result.assets[0].uri
+        }
+      })
     }
   };
 1
 
   const logOut = () => {
-    setIsOnboardingCompleted(false)
+    dispatch({
+      type: 'incomplete_onboarding'
+    })
   }
 
   const updateStorage = async () => {
@@ -59,7 +64,10 @@ function Profile () {
     try{
       const jsonValue = await AsyncStorage.getItem('loginInfo');
       const result = await jsonValue !== null ? JSON.parse(jsonValue) : null;
-      await result && setUser(result);
+      await result && dispatch({
+        type: 'update_user',
+        userInfo: result
+      });
       await console.log(user);
     } catch(e){
         console.log(e)
@@ -75,28 +83,36 @@ function Profile () {
           <View>
               <Text>First Name:</Text>
               <TextInput
-                value={user === null ? 'Not registered': user.firstName}
-                onChangeText={(text) => setUser({...user, firstName: text})}
+                value={state.user === null ? 'Not registered': state.user.firstName}
+                onChangeText={(text) => dispatch({
+                  type: 'update_user',
+                  userInfo: {
+                    ...state.user,
+                    firstName: text
+                  }
+                })}
               />
           </View>
           <View>
               <Text>Notification customizing</Text>
           </View>
           <View>
-            <TextInput onChangeText={(text) => 
-              setUser({
-                ...user,
-                phoneNumber: text
-              })} 
+            <TextInput onChangeText={(text) => dispatch({
+                  type: 'update_user',
+                  userInfo: {
+                    ...state.user,
+                    phoneNumber: text
+                  }
+                })} 
               placeholder='(334)123-1234'
               keyboardType='phone-pad'
-              value={user && user.phoneNumber}
+              value={state.user.phoneNumber}
             />
           </View>
           <View style={{borderRadius: 100}}>
-            {user !== null ? 
+            {state.user !== null ? 
                (
-                user.avatar ? <Image source={{uri: user.avatar }}  style={{ width: 200, height: 200 }}/> : <Text>Initial</Text>
+                state.user.avatar ? <Image source={{uri: state.user.avatar }}  style={{ width: 200, height: 200 }}/> : <Text>Initial</Text>
                ): <Text>Not registered..</Text>}
             <Button activeButton={true} onPressAction={pickImage}>Pick Image</Button>
           </View>

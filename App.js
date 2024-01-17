@@ -1,8 +1,8 @@
-import { useEffect, useState, createContext, useMemo } from 'react';
+import { useEffect, useState, createContext, useReducer } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 import Onboarding from './screens/Onboarding';
@@ -13,12 +13,54 @@ import Home from './screens/Home';
 const Stack = createNativeStackNavigator();
 export const AuthContext = createContext();
 
+function reducer(state, action) {
+  switch (action.type) {
+    case 'complete_onboarding': {
+      return {
+        ...state,
+        onBoardingStatus: true
+      };
+    }
+    case 'incomplete_onboarding': {
+      return {
+        ...state,
+        onBoardingStatus: false
+      };
+    }
+    case 'update_user': {
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          ...action.userInfo
+        }
+      };
+    }
+  }
+  throw Error('Unknown action: ' + action.type);
+}
+
+const initialState = { 
+  onBoardingStatus: false,
+  user: {
+    firstName:'',
+    lastName: '',
+    email: '',
+    avatar: '',
+    phoneNumber: '',
+    notification: {
+      orderStatus: true,
+      passwordChange: true,
+      specialOffer: true,
+      newsletter: true
+    }
+  }
+};
+
+
 export default function App() {
   const [ isLoading, setIsLoading ] = useState(false);
-  const [ isOnboardingCompleted, setIsOnboardingCompleted ] = useState(false);
-  const authContext = useMemo(() => ({
-    setIsOnboardingCompleted
-  }))
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   if(isLoading) {
     return (
@@ -28,10 +70,10 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <AuthContext.Provider value={authContext}>
+      <AuthContext.Provider value={{state, dispatch}}>
         <Stack.Navigator>
           {
-            isOnboardingCompleted ? (
+            state.onBoardingStatus ? (
             // Onboarding completed, user is signed in
             <>
               <Stack.Screen name="Home" component={Home} />

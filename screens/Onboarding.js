@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { AuthContext } from '../App';
 
 import { Text, TextInput, StyleSheet, View, Alert, Pressable } from 'react-native';
@@ -11,7 +11,7 @@ function Onboarding () {
     const [ email, setEmail ] = useState('');
     const [ isNameValid, setIsNameValid ] = useState(false);
     const [ isEmailValid, setIsEmailValid ] = useState(false);
-    const { setIsOnboardingCompleted } = useContext(AuthContext);
+    const {state, dispatch} = useContext(AuthContext);
 
     let activeButton = isNameValid && isEmailValid ;
     
@@ -31,8 +31,8 @@ function Onboarding () {
                 }
             })
             await AsyncStorage.setItem('loginInfo', jsonValue)
-            await setIsOnboardingCompleted(true)
-            await console.log(jsonValue)
+            console.log('hehehehe')
+            dispatch({type:'complete_onboarding'})
         } catch (e) {
             console.log(e)
         }
