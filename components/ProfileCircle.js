@@ -1,12 +1,15 @@
-import { Pressable, Image, Text } from "react-native";
+import { Pressable, Image, Text, StyleSheet } from "react-native";
 
 const ProfileCircle = ({avatar, navigation}) => {
     return (
-        <Pressable onPress={()=>{navigation.navigate("Profile")}}>
+        <Pressable 
+            style={styles.container}
+            onPress={()=>{navigation.navigate("Profile")}}
+        >
             {
                 avatar ? 
                 <Image 
-                style={{width: 200, height: 200}}
+                style={styles.image}
                 source={{uri: avatar}} />
                 : 
                 <Text>Click to Profile</Text>
@@ -14,5 +17,16 @@ const ProfileCircle = ({avatar, navigation}) => {
         </Pressable>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        borderRadius: 100
+    },
+    image: {
+        width: 60, 
+        height: 60,
+        borderRadius: 100
+    }
+})
 
 export default ProfileCircle;

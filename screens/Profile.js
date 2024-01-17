@@ -36,7 +36,7 @@ function Profile () {
     console.log(result);
 
     if (!result.canceled) {
-      dispatch({
+      await dispatch({
         type: 'update_user',
         userInfo: {
           ...state.user,
@@ -47,14 +47,31 @@ function Profile () {
   };
 1
 
-  const logOut = () => {
-    dispatch({
+  const logOut = async () => {
+    await AsyncStorage.removeItem('loginInfo')
+    await dispatch({
+      type: 'update_user',
+      userInfo: {
+        firstName:'',
+        lastName: '',
+        email: '',
+        avatar: '',
+        phoneNumber: '',
+        notification: {
+          orderStatus: true,
+          passwordChange: true,
+          specialOffer: true,
+          newsletter: true
+        }
+      }
+    })
+    await dispatch({
       type: 'incomplete_onboarding'
     })
   }
 
   const updateStorage = async () => {
-    await AsyncStorage.mergeItem('loginInfo', JSON.stringify(user))
+    await AsyncStorage.mergeItem('loginInfo', JSON.stringify(state.user))
     // read merged item
     const currentUserInfo = await AsyncStorage.getItem('loginInfo')
     console.log(currentUserInfo)

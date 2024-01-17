@@ -37,16 +37,17 @@ db.transaction(
     (tx) => {
         menuItems.forEach((item, index) => {
             const query = 
-            "INSERT INTO menuitems (id, name, description, price, image, category) VALUES (?, ?, ?, ?)";
+            "INSERT INTO menuitems (id, name, description, price, image, category) VALUES (?, ?, ?, ?, ?, ?)";
             const imageFile = `https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/${item?.image}?raw=true`
+            let itemVariables = [index, item?.name, item?.description, item?.price, imageFile, item?.category];
             tx.executeSql(
                 query,
-                [index + 1, item?.name, item?.description, item?.price, imageFile, item?.category],
+                itemVariables,
                 (_, { rows }) => {
-                    console.log(rows._array);
+                    // console.log('result:', rows._array);
                 },
                 (err) => {
-                console.log("Status : Saving to Storage Failed");
+                console.log("Status : Saving to Storage has failed");
                 }
             )
         })

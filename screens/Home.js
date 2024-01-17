@@ -1,12 +1,12 @@
-import { View, Text, Image, StyleSheet, FlatList } from 'react-native';
+import { View, Text, Image, StyleSheet, FlatList, ScrollView } from 'react-native';
 import {
     createTable,
     getMenuItems,
     saveMenuItems,
   } from "../database";
 import { useContext, useState, useEffect } from 'react';
-import ProfileCircle from '../components/ProfileCircle';
 import { AuthContext } from '../App';
+import MyHeader from '../components/MyHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const API_URL = "https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/capstone.json";
@@ -33,17 +33,20 @@ function Home({navigation}) {
         (
             async() => {
                 try {
-                    await  createTable();
+                    const result = await createTable();
 
                     let menuItems = await getMenuItems();
-
+                    
                     if(!menuItems.length) {
                         const menuItems = await fetchData();
+                        await console.log('from db:', menuItems)
                         await saveMenuItems(menuItems);
                     }
+
                     if(!menuItems.length) {
                         menuItems = await getMenuItems();
                     }
+
                     await setData(menuItems)
 
                 } catch(e) {
@@ -53,26 +56,26 @@ function Home({navigation}) {
         )();
     },[])
 
-    const Item = ({ name, price }) => (
-        <View >
+    const Item = ({ name, price, image }) => (
+        <View style={{flex: 1}}>
           <Text>{name}</Text>
           <Text>{price}</Text>
+          <Image style={{width: 100, height: 100, resizeMode: 'cover'}}
+            source={{uri: image}}
+          />
         </View>
       );
 
 
     return (
         <View>
-            {
-            state.user.avatar ?
-            <Image source={{uri: state.user.avatar }}  style={{ width: 200, height: 200 }}/> 
-            : <ProfileCircle navigation={navigation}/>
-            } 
-            <View>
-                <FlatList data={data} renderItem={({ item }) => (
-                    <Item name={item.name} price={item.price} />
-                    )}/>
-            </View>
+            <MyHeader title="Home" showProfileCirCle={true}/>
+            <FlatList 
+                data={data} 
+                renderItem={({ item }) => (
+                <Item name={item.name} price={item.price} image={item.image} />
+                )}
+            />
         </View>
     )
 }

@@ -1,14 +1,14 @@
 import { useEffect, useState, createContext, useReducer } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Onboarding from './screens/Onboarding';
 import Splash from './screens/Splash';
 import Profile from './screens/Profile';
 import Home from './screens/Home';
+import ProfileCircle from './components/ProfileCircle';
 
 const Stack = createNativeStackNavigator();
 export const AuthContext = createContext();
@@ -58,26 +58,66 @@ const initialState = {
 };
 
 
+
+
+
 export default function App() {
   const [ isLoading, setIsLoading ] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  if(isLoading) {
+  useEffect(()=> {
+    (async () => {
+      try{
+          const jsonValue = await AsyncStorage.getItem('loginInfo');
+          const result = await jsonValue !== null ? JSON.parse(jsonValue) : null;
+          
+          result !== null ? await dispatch({
+            type: 'update_user',
+            userInfo: result
+          }) : null;
+
+          result !== null ? await dispatch({
+            type: 'complete_onboarding'          
+          }) : null;
+
+          await setIsLoading(true);
+      } catch(e){
+          console.log(e)
+      }
+  })()
+  }, [])
+
+  if(!isLoading) {
     return (
       <Splash />
     )
   }
 
+  const LogoTitle = () => {
+    return (
+      <Image
+        style={{ width: 185, height: 40, resizeMode:'contain', paddingBottom: 20}}
+        source={require('./assets/Logo.png')}
+      />
+    );
+  }
+
   return (
     <NavigationContainer>
       <AuthContext.Provider value={{state, dispatch}}>
-        <Stack.Navigator>
+        <Stack.Navigator screenOptions={{headerShown: false}}>
           {
             state.onBoardingStatus ? (
             // Onboarding completed, user is signed in
             <>
-              <Stack.Screen name="Home" component={Home} />
-              <Stack.Screen name="Profile" component={Profile} />
+              <Stack.Screen 
+                name="Home" 
+                component={Home}
+              />
+              <Stack.Screen 
+                name="Profile" 
+                component={Profile} 
+              />
             </>
             ) : (
             // User is NOT signed in
