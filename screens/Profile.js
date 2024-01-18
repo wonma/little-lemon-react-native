@@ -84,7 +84,7 @@ const Profile = () => {
   }
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>Personal Information</Text>
+      <Text style={styles.title}>My Profile</Text>
       <Text style={styles.avatarText}>Avatar</Text>
 
       <View style={styles.avatarContainer}>

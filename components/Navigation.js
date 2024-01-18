@@ -31,6 +31,10 @@ const Navigation = () => {
                 headerTitle: () => <Logo />,
                 headerRight: () => <HeaderRight />,
                 headerLeft: () => <View style={{ width: "20%" }} />,
+                headerStyle: {
+                  justifyContent:'center',
+                  alignItems: 'center'
+                }
               }}
             />
             <Stack.Screen
@@ -38,6 +42,10 @@ const Navigation = () => {
               component={Profile}
               options={{
                 headerTitle: () => <Logo />,
+                headerStyle: {
+                  justifyContent:'center',
+                  alignItems: 'center'
+                }
               }}
             />
           </>
@@ -56,14 +64,14 @@ const styles = StyleSheet.create({
   },
 });
 
-const Header = () => {
-  return (
-    <Image
-      source={require("../assets/images/Logo.png")}
-      style={{ resizeMode: "contain", width: 200, height: 50 }}
-    />
-  );
-};
+// const Header = () => {
+//   return (
+//     <Image
+//       source={require("../assets/images/Logo.png")}
+//       style={{ resizeMode: "contain", width: 200, height: 50 }}
+//     />
+//   );
+// };
 
 const HeaderRight = () => {
   const navigation = useNavigation();

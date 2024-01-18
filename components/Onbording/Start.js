@@ -8,7 +8,7 @@ const Start = () => {
   return (
     <View style={styles.container}>
       <Logo />
-
+      <Text>Explore the excellent Mediterrian dishes</Text>
       {/* <MaskedView
         style={{flexDirection: "row", flex : 1}}
         maskElement={
