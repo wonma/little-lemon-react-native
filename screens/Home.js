@@ -51,7 +51,7 @@ import {
     }, [search, activeCategories]);
   
     return (
-      <View style={styles.constainer}>
+      <View style={styles.container}>
         <Hero>
           <View style={styles.search}>
             <Pressable
@@ -148,7 +148,7 @@ import {
   );
   
   const styles = StyleSheet.create({
-    constainer: {
+    container: {
       flex: 1,
     },
     search: {

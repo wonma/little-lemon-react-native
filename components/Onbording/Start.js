@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import Logo from "../Logo";
-import MaskedView from "@react-native-masked-view/masked-view";
+// import MaskedView from "@react-native-masked-view/masked-view";
 import { LinearGradient } from "expo-linear-gradient";
 
 const Start = () => {
@@ -9,7 +9,7 @@ const Start = () => {
     <View style={styles.container}>
       <Logo />
 
-      <MaskedView
+      {/* <MaskedView
         style={{flexDirection: "row", flex : 1}}
         maskElement={
           <View style={{flex : 1, justifyContent: "center", alignItems: "center" }}>
@@ -23,7 +23,7 @@ const Start = () => {
           start={{ x: 0.1, y: 0.5 }}
           end={{ x: 1, y: 0.5 }}
         ></LinearGradient>
-      </MaskedView>
+      </MaskedView> */}
     </View>
   );
 };

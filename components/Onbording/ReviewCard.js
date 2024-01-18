@@ -8,7 +8,7 @@ const ReviewCard = ({star}) => {
         <View style={styles.container}>
           <View style={styles.starContainer}>
             {[...Array(5).keys()].map((i) => (
-              <AntDesign key={i} name="star" size={24} color={i < star ? "yellow" : 'white'} />
+              <AntDesign key={i} name="star" size={24} color={i < star ? "#f8cb59" : 'white'} />
             ))}
           </View>
           <View style={styles.card}>
@@ -22,7 +22,7 @@ const ReviewCard = ({star}) => {
             </View>
           </View>
             <Text style={[styles.text, {width : 200}]} numberOfLines={3}>
-              "Seriously cannot stop thinking about the Turkish Mac n'Cheese!!"
+              "We love Little Lemon so much!!"
             </Text>
         </View>
       );
@@ -35,10 +35,10 @@ const styles = StyleSheet.create({
         padding : 10,
         justifyContent: "center",
         gap : 10,
-        borderWidth : StyleSheet.hairlineWidth,
-        borderColor : '#333333',
-        backgroundColor : '#FBDABB',
-        borderRadius : 30,
+        // borderWidth : StyleSheet.hairlineWidth,
+        // borderColor : '#333333',
+        backgroundColor : '#afcc8b',
+        borderRadius : 10,
       },
       starContainer: {
         flexDirection: "row",

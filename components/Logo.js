@@ -5,10 +5,10 @@ const Logo = () => {
   return (
     <View style={styles.logo}>
         <Image
-          source={require("../assets/adaptive-icon.png")}
-          style={{width : 80, height : 50, resizeMode : 'cover'}}
+          source={require("../assets/images/Logo.png")}
+          style={{width : 200, height : 100, resizeMode : 'contain'}}
         />
-        <Text style={styles.title}>Little Lemon</Text>
+        {/* <Text style={styles.title}>Welcome</Text> */}
       </View>
   )
 }
@@ -17,7 +17,7 @@ export default Logo
 
 const styles = StyleSheet.create({
     logo: {
-        flexDirection : 'row',
+        flexDirection : 'column',
         alignItems : 'center',
         justifyContent : 'center',
       },
